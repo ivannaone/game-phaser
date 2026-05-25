@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🍳 Warung Ivanna!</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #1a0a00;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: 'Nunito', sans-serif;
+      overflow: hidden;
+    }
+    #game-wrapper {
+      position: relative;
+      width: 800px;
+      height: 550px;
+    }
+    canvas {
+      border-radius: 16px;
+      box-shadow: 0 0 60px rgba(255, 120, 0, 0.4);
+      display: block;
+    }
+    #loading {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #FF6B35, #FF8E53, #FFD166);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+    #loading h1 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 42px;
+      color: white;
+      text-shadow: 3px 3px 0 rgba(0,0,0,.2);
+      margin-bottom: 12px;
+    }
+    #loading p {
+      color: rgba(255,255,255,.85);
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .spinner {
+      width: 48px; height: 48px;
+      border: 5px solid rgba(255,255,255,.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 20px auto 12px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div id="game-wrapper">
+    <div id="loading">
+      <h1>🍳 Warung Ivanna hihi!</h1>
+      <div class="spinner"></div>
+      <p>Memuat dapur... sebentar ya!</p>
+    </div>
+    <div id="game-container"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
+
+  <script src="js/data.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/SceneMenu.js"></script>
+  <script src="js/SceneGame.js"></script>
+  <script src="js/SceneGameOver.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
