@@ -20,8 +20,7 @@ class SceneMenu extends Phaser.Scene {
         targets: t,
         y: y - 14,
         duration: 1800 + i * 200,
-        yoyo: true,
-        repeat: -1,
+        yoyo: true, repeat: -1,
         ease: 'Sine.easeInOut',
         delay: i * 150,
       });
@@ -29,11 +28,11 @@ class SceneMenu extends Phaser.Scene {
 
     const titleBg = this.add.graphics();
     titleBg.fillStyle(0xFF6B35, 1);
-    titleBg.fillRoundedRect(W / 2 - 230, 140, 460, 80, 40);
+    titleBg.fillRoundedRect(W / 2 - 230, 130, 460, 80, 40);
     titleBg.lineStyle(4, 0xFFFFFF, 0.5);
-    titleBg.strokeRoundedRect(W / 2 - 230, 140, 460, 80, 40);
+    titleBg.strokeRoundedRect(W / 2 - 230, 130, 460, 80, 40);
 
-    this.add.text(W / 2, 180, '🍳 Warung Ivanna!', {
+    this.add.text(W / 2, 170, '🍳 Warung Ivanna!', {
       fontFamily: "'Fredoka One', cursive",
       fontSize: '46px',
       color: '#FFFFFF',
@@ -41,7 +40,7 @@ class SceneMenu extends Phaser.Scene {
       strokeThickness: 4,
     }).setOrigin(0.5);
 
-    this.add.text(W / 2, 242, 'Masak cepat, sajikan tepat!', {
+    this.add.text(W / 2, 228, 'Masak cepat, sajikan tepat!', {
       fontFamily: "'Fredoka One', cursive",
       fontSize: '20px',
       color: '#FF6B35',
@@ -56,7 +55,7 @@ class SceneMenu extends Phaser.Scene {
     ];
     cards.forEach((c, i) => {
       const cx = 170 + i * 230;
-      const cy = 330;
+      const cy = 320;
 
       const bg = this.add.graphics();
       bg.fillStyle(0xFFFFFF, 0.85);
@@ -74,26 +73,31 @@ class SceneMenu extends Phaser.Scene {
       }).setOrigin(0.5);
     });
 
+    const btnBaseY = 450;
+
     const btnBg = this.add.graphics();
     btnBg.fillStyle(0xFF6B35, 1);
-    btnBg.fillRoundedRect(W / 2 - 120, 460, 240, 60, 30);
+    btnBg.fillRoundedRect(-120, -30, 240, 60, 30);
     btnBg.lineStyle(4, 0xFFFFFF, 0.5);
-    btnBg.strokeRoundedRect(W / 2 - 120, 460, 240, 60, 30);
+    btnBg.strokeRoundedRect(-120, -30, 240, 60, 30);
 
-    const btnText = this.add.text(W / 2, 490, '▶  Mulai Main!', {
+    const btnText = this.add.text(0, 0, '▶  Mulai Main!', {
       fontFamily: "'Fredoka One', cursive",
       fontSize: '24px',
       color: '#FFFFFF',
     }).setOrigin(0.5);
 
-    const btn = this.add.zone(W / 2, 490, 240, 60)
+    // Container di posisi tengah tombol
+    const btnContainer = this.add.container(W / 2, btnBaseY + 30, [btnBg, btnText]);
+
+    const btn = this.add.zone(W / 2, btnBaseY + 30, 240, 60)
       .setInteractive({ useHandCursor: true });
 
     btn.on('pointerover', () => {
-      this.tweens.add({ targets: [btnBg, btnText], scaleX: 1.06, scaleY: 1.06, duration: 100 });
+      this.tweens.add({ targets: btnContainer, scaleX: 1.06, scaleY: 1.06, duration: 100 });
     });
     btn.on('pointerout', () => {
-      this.tweens.add({ targets: [btnBg, btnText], scaleX: 1, scaleY: 1, duration: 100 });
+      this.tweens.add({ targets: btnContainer, scaleX: 1, scaleY: 1, duration: 100 });
     });
     btn.on('pointerdown', () => {
       flashScreen(this, 0xFF6B35, 0.4, 300);
@@ -102,9 +106,11 @@ class SceneMenu extends Phaser.Scene {
       });
     });
 
+    // ✅ Tween pada container — y absolut, tidak terakumulasi
+    const baseCY = btnBaseY + 30;
     this.tweens.add({
-      targets: [btnBg, btnText],
-      y: '-=8',
+      targets: btnContainer,
+      y: { from: baseCY, to: baseCY - 8 },
       duration: 900,
       yoyo: true,
       repeat: -1,
@@ -120,23 +126,15 @@ class SceneMenu extends Phaser.Scene {
     bg.fillRect(0, 0, W, H);
 
     bg.lineStyle(1, 0xFFE0B2, 0.5);
-    for (let x = 0; x < W; x += 60) {
-      bg.lineBetween(x, 0, x, H * 0.55);
-    }
-    for (let y = 0; y < H * 0.55; y += 60) {
-      bg.lineBetween(0, y, W, y);
-    }
+    for (let x = 0; x < W; x += 60) bg.lineBetween(x, 0, x, H * 0.55);
+    for (let y = 0; y < H * 0.55; y += 60) bg.lineBetween(0, y, W, y);
 
     bg.fillStyle(0xBCAAA4, 1);
     bg.fillRect(0, H * 0.55, W, H);
 
     bg.lineStyle(1, 0xA1887F, 0.4);
-    for (let x = 0; x < W; x += 80) {
-      bg.lineBetween(x, H * 0.55, x, H);
-    }
-    for (let y = H * 0.55; y < H; y += 80) {
-      bg.lineBetween(0, y, W, y);
-    }
+    for (let x = 0; x < W; x += 80) bg.lineBetween(x, H * 0.55, x, H);
+    for (let y = H * 0.55; y < H; y += 80) bg.lineBetween(0, y, W, y);
 
     const counterY = H * 0.55 - 20;
     bg.fillStyle(0x6D4C41, 1);

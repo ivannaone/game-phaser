@@ -16,64 +16,39 @@ class SceneGame extends Phaser.Scene {
   }
 
   preload() {
-
     this.load.audio('bgm', 'assets/audio/bgm.mp3');
-
     this.load.audio('click', 'assets/audio/click.mp3');
-
     this.load.audio('success', 'assets/audio/success.mp3');
-
     this.load.audio('fail', 'assets/audio/fail.mp3');
-
   }
 
   create() {
-    this.bgm = this.sound.add('bgm', {
-    loop: true,
-    volume: 0.3
-});
-
-this.time.delayedCall(500, () => {
-
-    this.input.once('pointerdown', () => {
-
-        if (!this.bgm.isPlaying) {
-            this.bgm.play();
-        }
-
+    this.bgm = this.sound.add('bgm', { loop: true, volume: 0.3 });
+    this.time.delayedCall(500, () => {
+      this.input.once('pointerdown', () => {
+        if (!this.bgm.isPlaying) this.bgm.play();
+      });
     });
-
-});
 
     const W = GAME_CONFIG.WIDTH;
     const H = GAME_CONFIG.HEIGHT;
 
     this._buildBackground(W, H);
-
     this._buildHUD(W);
-
     this._buildOrderBoard(W, H);
-
     this._buildCookingArea(W, H);
-
     this._buildChef(W, H);
-
     this._buildIngredientButtons(W, H);
 
     this.time.delayedCall(300, () => this._nextOrder());
-}
+  }
 
   update(time, delta) {
     if (this.isProcessing || !this.recipe) return;
-
     this.timerLeft -= delta;
     if (this.timerLeft < 0) this.timerLeft = 0;
-
     this._updateTimerBar();
-
-    if (this.timerLeft <= 0) {
-      this._timeUp();
-    }
+    if (this.timerLeft <= 0) this._timeUp();
   }
 
   _buildBackground(W, H) {
@@ -81,7 +56,6 @@ this.time.delayedCall(500, () => {
 
     bg.fillStyle(0xFFF3E0, 1);
     bg.fillRect(0, 0, W, H * 0.6);
-
     bg.lineStyle(1, 0xFFE0B2, 0.45);
     for (let x = 0; x < W; x += 60) bg.lineBetween(x, 0, x, H * 0.6);
     for (let y = 0; y < H * 0.6; y += 60) bg.lineBetween(0, y, W, y);
@@ -128,10 +102,8 @@ this.time.delayedCall(500, () => {
     }).setOrigin(0, 0.5);
 
     this._buildPill(W - 260, 24, '⭐', () => `${this.score}`, 'scoreTxt');
-
     this._buildPill(W - 150, 24, '❤️', () => `${this.lives}`, 'livesTxt');
-
-    this._buildPill(W - 55, 24, '🏆', () => `${this.level}`, 'levelTxt');
+    this._buildPill(W - 55,  24, '🏆', () => `${this.level}`, 'levelTxt');
   }
 
   _buildPill(x, y, icon, getter, key) {
@@ -156,16 +128,16 @@ this.time.delayedCall(500, () => {
   _buildOrderBoard(W, H) {
     const bx = W - 185, by = 58, bw = 178, bh = 230;
 
+    const shadow = this.add.graphics();
+    shadow.fillStyle(0x000000, 0.12);
+    shadow.fillRoundedRect(bx + 4, by + 4, bw, bh, 14);
+    shadow.setDepth(-1);
+
     const panel = this.add.graphics();
     panel.fillStyle(0xFFFDE7, 1);
     panel.fillRoundedRect(bx, by, bw, bh, 14);
     panel.lineStyle(3, 0xFFD54F, 1);
     panel.strokeRoundedRect(bx, by, bw, bh, 14);
-
-    const shadow = this.add.graphics();
-    shadow.fillStyle(0x000000, 0.12);
-    shadow.fillRoundedRect(bx + 4, by + 4, bw, bh, 14);
-    shadow.setDepth(-1);
 
     this.add.text(bx + bw / 2, by + 16, '📋 Pesanan Tamu', {
       fontFamily: "'Fredoka One', cursive",
@@ -203,10 +175,10 @@ this.time.delayedCall(500, () => {
     this.timerBar = this.add.graphics();
     this._redrawTimerBar(bx + 10, by + bh - 18, bw - 20, 10, 1.0, COLORS.TIMER_OK);
 
-    this._timerBarX  = bx + 10;
-    this._timerBarY  = by + bh - 18;
-    this._timerBarW  = bw - 20;
-    this._timerBarH  = 10;
+    this._timerBarX = bx + 10;
+    this._timerBarY = by + bh - 18;
+    this._timerBarW = bw - 20;
+    this._timerBarH = 10;
   }
 
   _redrawTimerBar(x, y, w, h, pct, color) {
@@ -225,7 +197,6 @@ this.time.delayedCall(500, () => {
       this._timerBarW, this._timerBarH,
       pct, color
     );
-
     if (pct <= 0.2 && Math.random() < 0.15) {
       this.cameras.main.shake(80, 0.002);
     }
@@ -234,14 +205,11 @@ this.time.delayedCall(500, () => {
   _buildCookingArea(W, H) {
     const cx = 280, cy = H * 0.38;
 
-    this.flameText = this.add.text(cx, cy + 62, '🔥', { fontSize: '30px' })
-      .setOrigin(0.5);
+    this.flameText = this.add.text(cx, cy + 62, '🔥', { fontSize: '30px' }).setOrigin(0.5);
     this.tweens.add({
       targets: this.flameText,
       scaleX: 1.25, scaleY: 0.85,
-      duration: 300,
-      yoyo: true,
-      repeat: -1,
+      duration: 300, yoyo: true, repeat: -1,
       ease: 'Sine.easeInOut',
     });
 
@@ -272,10 +240,10 @@ this.time.delayedCall(500, () => {
     const chef = this.add.graphics();
     chef.fillStyle(0x5D4037, 1);
     chef.fillRoundedRect(cx - 24, cy + 30, 18, 28, 4);
-    chef.fillRoundedRect(cx + 6, cy + 30, 18, 28, 4);
+    chef.fillRoundedRect(cx + 6,  cy + 30, 18, 28, 4);
     chef.fillStyle(0x3E2723, 1);
     chef.fillRoundedRect(cx - 28, cy + 52, 22, 10, 5);
-    chef.fillRoundedRect(cx + 4, cy + 52, 22, 10, 5);
+    chef.fillRoundedRect(cx + 4,  cy + 52, 22, 10, 5);
     chef.fillStyle(0xFFFFFF, 1);
     chef.fillRoundedRect(cx - 30, cy - 10, 60, 42, 8);
     chef.lineStyle(2, 0xFF6B35, 0.5);
@@ -294,14 +262,12 @@ this.time.delayedCall(500, () => {
     head.fillStyle(0xFF8A65, 0.55);
     head.fillCircle(cx - 16, cy - 22, 7);
     head.fillCircle(cx + 16, cy - 22, 7);
-
     head.fillStyle(0x3E2723, 1);
     head.fillCircle(cx - 9, cy - 31, 4);
     head.fillCircle(cx + 9, cy - 31, 4);
     head.fillStyle(0xFFFFFF, 1);
-    head.fillCircle(cx - 7, cy - 33, 1.5);
+    head.fillCircle(cx - 7,  cy - 33, 1.5);
     head.fillCircle(cx + 11, cy - 33, 1.5);
-
     head.lineStyle(2.5, 0xE65100, 1);
     head.beginPath();
     head.arc(cx, cy - 22, 9, 0.3, Math.PI - 0.3);
@@ -314,24 +280,17 @@ this.time.delayedCall(500, () => {
     hat.lineStyle(2, 0xE0E0E0, 1);
     hat.strokeRoundedRect(cx - 22, cy - 66, 44, 36, 4);
 
-    const spoon = this.add.text(cx + 42, cy - 10, '🥄', { fontSize: '22px' })
-      .setOrigin(0.5);
+    const spoon = this.add.text(cx + 42, cy - 10, '🥄', { fontSize: '22px' }).setOrigin(0.5);
     this.tweens.add({
-      targets: spoon,
-      angle: 15,
-      duration: 600,
-      yoyo: true,
-      repeat: -1,
+      targets: spoon, angle: 15,
+      duration: 600, yoyo: true, repeat: -1,
       ease: 'Sine.easeInOut',
     });
 
-    const chefGroup = [chef, head, hat];
     this.tweens.add({
-      targets: chefGroup,
-      y: '-=7',
-      duration: 900,
-      yoyo: true,
-      repeat: -1,
+      targets: [chef, head, hat],
+      y: '-=7', duration: 900,
+      yoyo: true, repeat: -1,
       ease: 'Sine.easeInOut',
     });
 
@@ -348,217 +307,77 @@ this.time.delayedCall(500, () => {
   }
 
   _buildIngredientButtons(W, H) {
+    const count  = INGREDIENTS.length;
+    const btnW   = 82;
+    const btnH   = 92;
+    const gap    = 14;
+    const totalW = count * btnW + (count - 1) * gap;
+    const startX = (W - totalW) / 2 + btnW / 2;
+    const y      = H - 58;
 
-  const count = INGREDIENTS.length;
+    this.ingButtons = [];
 
-  const btnW = 82;
-  const btnH = 92;
+    INGREDIENTS.forEach((ing, i) => {
+      const x          = startX + i * (btnW + gap);
+      const iconBaseY  = y - 18;
+      const labelBaseY = y + 26;
 
-  const gap = 14;
+      const shadow = this.add.graphics();
+      shadow.fillStyle(0xD98B2B, 0.25);
+      shadow.fillRoundedRect(x - btnW / 2, y - btnH / 2 + 5, btnW, btnH, 18);
 
-  const totalW =
-    (count * btnW) +
-    ((count - 1) * gap);
+      const bg = this.add.graphics();
+      this._drawIngBtn(bg, x, y, btnW, btnH, false);
 
-  const startX =
-    (W - totalW) / 2 + (btnW / 2);
+      const icon = this.add.text(x, iconBaseY, ing.icon, {
+        fontSize: '28px', fixedWidth: 40, align: 'center',
+      }).setOrigin(0.5).setResolution(2);
 
-  const y = H - 58;
-
-  this.ingButtons = [];
-
-  INGREDIENTS.forEach((ing, i) => {
-
-    const x = startX + i * (btnW + gap);
-
-    // Posisi Y awal yang tetap untuk icon dan label
-    const iconBaseY  = y - 18;
-    const labelBaseY = y + 26;
-
-    const shadow = this.add.graphics();
-
-    shadow.fillStyle(0xD98B2B, 0.25);
-
-    shadow.fillRoundedRect(
-      x - btnW / 2,
-      y - btnH / 2 + 5,
-      btnW,
-      btnH,
-      18
-    );
-
-    const bg = this.add.graphics();
-
-    this._drawIngBtn(
-      bg,
-      x,
-      y,
-      btnW,
-      btnH,
-      false
-    );
-
-    const icon = this.add.text(
-      x,
-      iconBaseY,
-      ing.icon,
-      {
-        fontSize: '28px',
-        fixedWidth: 40,
-        align: 'center'
-      }
-    )
-      .setOrigin(0.5)
-      .setResolution(2);
-
-    const label = this.add.text(
-      x,
-      labelBaseY,
-      ing.name,
-      {
+      const label = this.add.text(x, labelBaseY, ing.name, {
         fontFamily: "'Nunito', sans-serif",
-        fontSize: '11px',
-        fontStyle: 'bold',
-        color: '#5D4037',
-        fixedWidth: 60,
-        align: 'center'
-      }
-    )
-      .setOrigin(0.5)
-      .setResolution(2);
+        fontSize: '11px', fontStyle: 'bold',
+        color: '#5D4037', fixedWidth: 60, align: 'center',
+      }).setOrigin(0.5).setResolution(2);
 
-    const check = this.add.text(
-      x + 28,
-      y - 32,
-      '✓',
-      {
+      const check = this.add.text(x + 28, y - 32, '✓', {
         fontFamily: "'Fredoka One', cursive",
-        fontSize: '14px',
-        color: '#FFFFFF',
+        fontSize: '14px', color: '#FFFFFF',
         backgroundColor: '#4CAF50',
-        padding: { x: 4, y: 2 }
-      }
-    )
-    .setOrigin(0.5)
-    .setAlpha(0);
+        padding: { x: 4, y: 2 },
+      }).setOrigin(0.5).setAlpha(0);
 
-    const zone = this.add.zone(
-      x,
-      y,
-      btnW,
-      btnH
-    ).setInteractive({
-      useHandCursor: true
-    });
+      const zone = this.add.zone(x, y, btnW, btnH).setInteractive({ useHandCursor: true });
 
-    zone.on('pointerover', () => {
-
-      if (this.collected.includes(ing.id)) return;
-
-      this.tweens.killTweensOf([icon, label]);
-
-      // Tween ke posisi absolut (base - 5), bukan relatif
-      this.tweens.add({
-        targets: icon,
-        y: iconBaseY - 5,
-        scaleX: 1.1,
-        scaleY: 1.1,
-        duration: 120,
-        ease: 'Power2'
+      zone.on('pointerover', () => {
+        if (this.collected.includes(ing.id)) return;
+        this.tweens.killTweensOf([icon, label]);
+        this.tweens.add({ targets: icon,  y: iconBaseY - 5,  scaleX: 1.1, scaleY: 1.1, duration: 120, ease: 'Power2' });
+        this.tweens.add({ targets: label, y: labelBaseY - 5, duration: 120, ease: 'Power2' });
       });
 
-      this.tweens.add({
-        targets: label,
-        y: labelBaseY - 5,
-        duration: 120,
-        ease: 'Power2'
+      zone.on('pointerout', () => {
+        this.tweens.killTweensOf([icon, label]);
+        this.tweens.add({ targets: icon,  y: iconBaseY,  scaleX: 1, scaleY: 1, duration: 120, ease: 'Power2' });
+        this.tweens.add({ targets: label, y: labelBaseY, duration: 120, ease: 'Power2' });
       });
 
+      zone.on('pointerdown', () => this._onIngredientClick(ing, i));
+
+      this.ingButtons.push({ bg, shadow, icon, label, check, zone, ing, x, y, iconBaseY, labelBaseY, btnW, btnH });
     });
-
-    zone.on('pointerout', () => {
-
-      this.tweens.killTweensOf([icon, label]);
-
-      // Kembali ke posisi absolut semula
-      this.tweens.add({
-        targets: icon,
-        y: iconBaseY,
-        scaleX: 1,
-        scaleY: 1,
-        duration: 120,
-        ease: 'Power2'
-      });
-
-      this.tweens.add({
-        targets: label,
-        y: labelBaseY,
-        duration: 120,
-        ease: 'Power2'
-      });
-
-    });
-
-    zone.on('pointerdown', () => {
-      this._onIngredientClick(ing, i);
-    });
-
-    this.ingButtons.push({
-      bg,
-      shadow,
-      icon,
-      label,
-      check,
-      zone,
-      ing,
-      y,
-      iconBaseY,
-      labelBaseY
-    });
-
-  });
-}
+  }
 
   _drawIngBtn(g, x, y, w, h, used) {
-
-  g.clear();
-
-  const fillColor =
-    used ? 0xDFF5E1 : 0xFFFFFF;
-
-  const strokeColor =
-    used ? 0x66BB6A : 0xFFCC80;
-
-  g.fillStyle(fillColor, 1);
-
-  g.fillRoundedRect(
-    x - w / 2,
-    y - h / 2,
-    w,
-    h,
-    18
-  );
-
-  g.lineStyle(3, strokeColor, 1);
-
-  g.strokeRoundedRect(
-    x - w / 2,
-    y - h / 2,
-    w,
-    h,
-    18
-  );
-
-  g.fillStyle(0xFFFFFF, 0.25);
-
-  g.fillRoundedRect(
-    x - w / 2 + 4,
-    y - h / 2 + 4,
-    w - 8,
-    18,
-    10
-  );
-}
+    g.clear();
+    const fillColor   = used ? 0xDFF5E1 : 0xFFFFFF;
+    const strokeColor = used ? 0x66BB6A : 0xFFCC80;
+    g.fillStyle(fillColor, 1);
+    g.fillRoundedRect(x - w / 2, y - h / 2, w, h, 18);
+    g.lineStyle(3, strokeColor, 1);
+    g.strokeRoundedRect(x - w / 2, y - h / 2, w, h, 18);
+    g.fillStyle(0xFFFFFF, 0.25);
+    g.fillRoundedRect(x - w / 2 + 4, y - h / 2 + 4, w - 8, 18, 10);
+  }
 
   _nextOrder() {
     this.isProcessing = false;
@@ -569,13 +388,11 @@ this.time.delayedCall(500, () => {
     this.timerLeft    = this.timerMax;
 
     this.ingButtons.forEach(b => {
-      this._drawIngBtn(b.bg, b.icon.x, b.y, 76, 80, false);
+      this._drawIngBtn(b.bg, b.x, b.y, b.btnW, b.btnH, false);
       b.check.setAlpha(0);
-
-      // Reset posisi icon & label ke base masing-masing
       this.tweens.killTweensOf([b.icon, b.label]);
-      b.icon.y  = b.iconBaseY;
-      b.label.y = b.labelBaseY;
+      b.icon.setPosition(b.x, b.iconBaseY);
+      b.label.setPosition(b.x, b.labelBaseY);
       b.icon.setScale(1);
     });
 
@@ -595,9 +412,7 @@ this.time.delayedCall(500, () => {
   }
 
   _onIngredientClick(ing, btnIdx) {
-      this.sound.play('click', {
-      volume: 0.5
-    });
+    this.sound.play('click', { volume: 0.5 });
     if (this.isProcessing || !this.recipe) return;
 
     if (this.collected.includes(ing.id)) {
@@ -607,7 +422,7 @@ this.time.delayedCall(500, () => {
 
     if (!this.recipe.needs.includes(ing.id)) {
       this._wrongShake(btnIdx);
-      spawnPopup(this, ing.icon.x ?? 400, 420, '❌ Bukan bahan ini!', '#F44336');
+      spawnPopup(this, 400, 420, '❌ Bukan bahan ini!', '#F44336');
       shakeCamera(this, 0.006, 200);
       this._chefSay('Eh salah bahan! 😅');
       return;
@@ -616,15 +431,10 @@ this.time.delayedCall(500, () => {
     this.collected.push(ing.id);
 
     const btn = this.ingButtons[btnIdx];
-    this._drawIngBtn(btn.bg, btn.icon.x, btn.y, 76, 80, true);
+    this._drawIngBtn(btn.bg, btn.x, btn.y, btn.btnW, btn.btnH, true);
     btn.check.setAlpha(1);
 
-    this.tweens.add({
-      targets: btn.icon,
-      scaleX: 1.4, scaleY: 1.4,
-      duration: 120,
-      yoyo: true,
-    });
+    this.tweens.add({ targets: btn.icon, scaleX: 1.4, scaleY: 1.4, duration: 120, yoyo: true });
 
     spawnParticles(this, btn.icon.x, btn.icon.y, ing.icon, 5);
 
@@ -653,13 +463,7 @@ this.time.delayedCall(500, () => {
       fontSize: '24px',
     }).setOrigin(0.5).setDepth(10);
 
-    this.tweens.add({
-      targets: t,
-      x: tx, y: ty,
-      duration: 350,
-      ease: 'Back.easeOut',
-    });
-
+    this.tweens.add({ targets: t, x: tx, y: ty, duration: 350, ease: 'Back.easeOut' });
     this.panFoodGroup.push(t);
   }
 
@@ -669,9 +473,7 @@ this.time.delayedCall(500, () => {
   }
 
   _success() {
-    this.sound.play('success', {
-      volume: 0.6
-    });
+    this.sound.play('success', { volume: 0.6 });
     this.isProcessing = true;
 
     const bonus = Math.floor((this.timerLeft / this.timerMax) * GAME_CONFIG.TIME_BONUS_MAX);
@@ -701,9 +503,7 @@ this.time.delayedCall(500, () => {
   }
 
   _timeUp() {
-    this.sound.play('fail', {
-      volume: 0.6
-    });
+    this.sound.play('fail', { volume: 0.6 });
     if (this.isProcessing) return;
     this.isProcessing = true;
 
@@ -724,23 +524,30 @@ this.time.delayedCall(500, () => {
   }
 
   _wrongShake(btnIdx) {
-    const btn = this.ingButtons[btnIdx];
-    this.tweens.add({
-      targets: [btn.bg, btn.icon, btn.label],
-      x: '+=6',
-      duration: 60,
-      yoyo: true,
-      repeat: 3,
-    });
+    const btn   = this.ingButtons[btnIdx];
+    const origX = btn.x;
+    let count   = 0;
+
+    const shakeStep = () => {
+      if (count >= 6) {
+        btn.icon.x  = origX;
+        btn.label.x = origX;
+        return;
+      }
+      const offset = count % 2 === 0 ? 6 : -6;
+      btn.icon.x  = origX + offset;
+      btn.label.x = origX + offset;
+      count++;
+      this.time.delayedCall(55, shakeStep);
+    };
+    shakeStep();
   }
 
   _chefSay(text) {
     this.speechBubble.setText(text).setAlpha(1);
     this.tweens.add({
       targets: this.speechBubble,
-      alpha: 0,
-      duration: 400,
-      delay: 1800,
+      alpha: 0, duration: 400, delay: 1800,
     });
   }
 }
