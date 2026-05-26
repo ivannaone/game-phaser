@@ -1,10 +1,10 @@
-# 🍳 Warung Seru! — Game Memasak Indonesia
+# 🍳 Warung Ivanna! — Game Memasak Indonesia
 
 Game memasak 2D lucu berbasis **Phaser 3** dengan tema warung makan Indonesia.
 
 ---
 
-## 📁 Struktur Project
+##  Struktur Project
 
 ```
 warung-seru/
@@ -21,7 +21,7 @@ warung-seru/
 
 ---
 
-## 🚀 Cara Menjalankan di VS Code
+## Cara Menjalankan di VS Code
 
 ### Cara 1 — Live Server (Rekomendasi)
 1. Install ekstensi **Live Server** di VS Code
@@ -37,7 +37,7 @@ warung-seru/
 
 ---
 
-## 🎮 Cara Main
+## Cara Main
 
 | Aksi | Cara |
 |------|------|
@@ -54,7 +54,7 @@ warung-seru/
 
 ---
 
-## ✏️ Cara Modifikasi
+## Cara Modifikasi
 
 ### Tambah bahan baru → `js/data.js`
 ```js
@@ -86,7 +86,7 @@ const GAME_CONFIG = {
 
 ---
 
-## 🔧 Pengembangan Lanjutan
+## Pengembangan Lanjutan
 
 Ide fitur yang bisa kamu tambahkan sendiri:
 
@@ -99,7 +99,7 @@ Ide fitur yang bisa kamu tambahkan sendiri:
 
 ---
 
-## 📦 Dependensi
+## Dependensi
 
 | Library | Versi | Cara Load |
 |---------|-------|-----------|
@@ -111,7 +111,7 @@ Ide fitur yang bisa kamu tambahkan sendiri:
 
 ---
 
-## 📖 Belajar Lebih Lanjut
+## Belajar Lebih Lanjut
 
 - [Phaser 3 Official Docs](https://docs.phaser.io/phaser3)
 - [Phaser 3 Examples](https://phaser.io/examples)
